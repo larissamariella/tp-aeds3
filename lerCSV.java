@@ -3,7 +3,7 @@ import java.util.*;
 
 public class lerCSV {
 
-    void lerArquivoCSV() throws IOException {
+    void lerArquivoCSV() throws Exception {
         String nomeArquivo = "10booksExample.csv";
         RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw");
 
@@ -11,15 +11,15 @@ public class lerCSV {
         String str = arq.readLine();
         Livro livro;
 
-        //str = arq.readLine();
-        while ((str = arq.readLine()) != null) {
+        str = arq.readLine();
+        //while ((str = arq.readLine()) != null) {
             livro = new Livro();
            // livro = lerStringLivro(str, livro, ultimoID);
             livro = lerStringLivro(str, livro, ultimoID);
             ultimoID ++;
 
            escreverLivro(livro);
-        }
+        //}
         arq.close();
     }
     
@@ -40,7 +40,6 @@ public class lerCSV {
         livro.id = ultimoID + 1;
         indice = lerCodigo(str, livro);
         indice = lerTitulo(str, livro, indice);
-        System.out.println("t2- "+ livro.titulo);
         indice = lerAutor(str, livro, indice);
         indice = lerAvaliacao(str, livro, indice);
         indice = lerPreco(str, livro, indice);
@@ -84,17 +83,26 @@ public class lerCSV {
 
     int lerTitulo(String str, Livro livro, int i) {
         String titulo = "";
-        int posicao;
+        int posicao = 0;;
 
         if (str.contains(String.valueOf('"'))) {
             int posicaoInicial = str.indexOf('"');
-            posicao = str.indexOf('"', posicaoInicial + 1);
-            titulo = str.substring(posicaoInicial + 1, posicao);
+            int j = posicaoInicial;
+            while (j++<str.length()-2) {
+                if(str.charAt(j)!='"' && (str.charAt(j+1)!='"' && str.charAt(j)!=',')){
+                    titulo += str.charAt(j);
+                }
+                if(str.charAt(j)=='"' && str.charAt(j+1) == ',') {
+                    posicao = j;
+                    j = str.length();
+                }
+            }
         } 
         else {
             posicao = str.indexOf(',', i + 1);
             titulo = str.substring(i, posicao);
         }
+        System.out.println(titulo);
         livro.titulo = titulo;
         return posicao;
     }
@@ -156,11 +164,10 @@ public class lerCSV {
         }
     }
     
-/*
     public static void main(String[] args) throws Exception {
         lerCSV l = new lerCSV();
         l.lerArquivoCSV();
     } 
-*/
+
 
 }
