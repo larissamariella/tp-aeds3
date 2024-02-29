@@ -3,7 +3,7 @@ import java.util.*;
 
 public class lerCSV {
 
-    void lerArquivoCSV() throws Exception {
+    void lerArquivoCSV() throws IOException {
         String nomeArquivo = "10booksExample.csv";
         RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw");
 
@@ -11,15 +11,15 @@ public class lerCSV {
         String str = arq.readLine();
         Livro livro;
 
-        str = arq.readLine();
-        //while ((str = arq.readLine()) != null) {
+        //str = arq.readLine();
+        while ((str = arq.readLine()) != null) {
             livro = new Livro();
            // livro = lerStringLivro(str, livro, ultimoID);
             livro = lerStringLivro(str, livro, ultimoID);
             ultimoID ++;
 
            escreverLivro(livro);
-        //}
+        }
         arq.close();
     }
     
@@ -40,6 +40,7 @@ public class lerCSV {
         livro.id = ultimoID + 1;
         indice = lerCodigo(str, livro);
         indice = lerTitulo(str, livro, indice);
+        System.out.println("t2- "+ livro.titulo);
         indice = lerAutor(str, livro, indice);
         indice = lerAvaliacao(str, livro, indice);
         indice = lerPreco(str, livro, indice);
