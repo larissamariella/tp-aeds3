@@ -86,8 +86,10 @@ class Livro {
         dos.writeFloat(preco);
         dos.writeBoolean(kindleUnlimited);
         dos.writeLong(data);
-        //dos.writeUTF(nomeCategoria);
-
+        dos.writeInt(nomeCategoria.length);
+        for (int i = 0; i < nomeCategoria.length; i++) {
+            dos.writeUTF(nomeCategoria[i]);
+        }
         return baos.toByteArray();
     }
 
@@ -103,6 +105,10 @@ class Livro {
         preco = dis.readFloat();
         kindleUnlimited = dis.readBoolean();
         data = dis.readLong();
-      //  nomeCategoria = dis.readUTF();
+        int tamCategorias = dis.readInt();
+        nomeCategoria = new String[tamCategorias];
+        for (int i = 0; i < tamCategorias; i++) {
+            nomeCategoria[i] = dis.readUTF();
+        }
     }
 }
