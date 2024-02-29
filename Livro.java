@@ -90,8 +90,6 @@ class Livro {
         for (int i = 0; i < nomeCategoria.length; i++) {
             dos.writeUTF(nomeCategoria[i]);
         }
-        //dos.writeUTF(nomeCategoria);
-
         return baos.toByteArray();
     }
 
