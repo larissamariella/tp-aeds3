@@ -27,8 +27,8 @@ public class lerByte {
         return livro;
     }
    
-   /*
-    *  public static void main(String[] args) {
+    public static void main(String[] args) {
+        System.out.println("ARQUIVO BYTES");
         lerByte l = new lerByte();
       
         try{
@@ -39,5 +39,5 @@ public class lerByte {
         }
     }
     
-    */
+
 }
