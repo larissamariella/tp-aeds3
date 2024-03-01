@@ -1,0 +1,9 @@
+NOTAS 
+1 - precisa modularizar o codigo
+2 - o char lápide esta sendo carregado com o '-' pois quando carrega com ' ', não estava dando certo
+3 - precisa comentar o codigo 
+4 - precisa fazer o arquivo main com todas as inicializações
+5 - tem algum jeito de carregar a base apenas 1 vez? para que o arquivo byte nao seja gerado cada vez que o codigo for compilado?
+  - por exemplo, se o arquivo com aquele x nome ja existe, o programa não precisa gerar outro.
+  - ou pode perguntar para o usuário se ele deseja gerar o arquivo byte ou não
+6 - criar o atualizarLivro()
