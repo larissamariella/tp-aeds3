@@ -38,6 +38,49 @@ class Livro {
         this.data = data;
         this.nomeCategoria = nomeCategoria;
     }
+
+    public void setId(String id) {
+        this.id = Integer.parseInt(id);
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public void setAvaliacao(String avaliacao) {
+        this.avaliacao = Float.parseFloat(avaliacao);
+    }
+
+    public void setPreco(String preco) {
+        this.preco = Float.parseFloat(preco);
+    }
+
+    public void setKindleUnlimited(String kindleUnlimited) {
+        this.kindleUnlimited = Boolean.parseBoolean(kindleUnlimited);
+    }
+
+    public void setData(String data) {
+        this.data = Util.formatarData(data);
+    }
+
+    public void setNomeCategoria(String[] nomeCategoria) {
+        this.nomeCategoria = new String[nomeCategoria.length];
+        for (int i = 0; i < nomeCategoria.length; i++) {
+           this.nomeCategoria[i] = nomeCategoria[i];
+        }
+    }
+
+    public void setDataPublicada(String dataPublicada) {
+        this.dataPublicada = Long.parseLong(dataPublicada);
+    }
     
     @Override
     public String toString() {
@@ -71,7 +114,7 @@ class Livro {
         for (int i = 0; i <livro.nomeCategoria.length; i++) {
             System.out.print(livro.nomeCategoria[i] + " ");
         }
-        System.out.println();
+        System.out.println("\n");
     }
     
     public byte [] toByteArray() throws IOException{
@@ -90,10 +133,31 @@ class Livro {
         for (int i = 0; i < nomeCategoria.length; i++) {
             dos.writeUTF(nomeCategoria[i]);
         }
+        //dos.writeUTF(nomeCategoria);
+
         return baos.toByteArray();
     }
 
     public void fromByteArray(byte [] ba) throws IOException{
+        ByteArrayInputStream bais = new ByteArrayInputStream(ba);
+        DataInputStream dis = new DataInputStream(bais);
+
+        id = dis.readInt();
+        codigo = dis.readUTF();
+        titulo = dis.readUTF();
+        autor = dis.readUTF();
+        avaliacao = dis.readFloat();
+        preco = dis.readFloat();
+        kindleUnlimited = dis.readBoolean();
+        data = dis.readLong();
+        int tamCategorias = dis.readInt();
+        nomeCategoria = new String[tamCategorias];
+        for (int i = 0; i < tamCategorias; i++) {
+            nomeCategoria[i] = dis.readUTF();
+        }
+    }
+
+    public Livro(byte [] ba) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 

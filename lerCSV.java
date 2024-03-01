@@ -2,33 +2,24 @@ import java.io.*;
 import java.util.*;
 
 public class lerCSV {
-    void lerArquivoCSV() throws Exception {
+    void lerArquivoCSV() throws IOException {
         String nomeArquivo = "amz kindle books updated.csv";
         RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw");
-
+        RandomAccessFile arqByte = new RandomAccessFile("ARQUIVO.db", "rw");
+        
         int ultimoID = 0;
         String str = arq.readLine();
         Livro livro;
-
+        arqByte.seek(0);
         while ((str = arq.readLine()) != null) {
             livro = new Livro();
             livro = lerStringLivro(str, livro, ultimoID);
             ultimoID ++;
-           escreverLivro(livro);
+            Util.escreverLivro(livro, arqByte);
+            Livro.exibir(livro);
         }
         arq.close();
-    }
-    
-    void escreverLivro(Livro livro) throws IOException {
-        RandomAccessFile arq = new RandomAccessFile("arquivoByte.db", "rw");
-        arq.writeInt(livro.id);
-        arq.seek(arq.length());
-        
-        byte[] ba = livro.toByteArray();
-        arq.writeChar('*');
-        arq.writeInt((ba.length));
-        arq.write(ba);
-        arq.close();
+        arqByte.close();
     }
 
     Livro lerStringLivro(String str, Livro livro, int ultimoID){
@@ -149,10 +140,12 @@ public class lerCSV {
         }
     }
     
-/*
-     public static void main(String[] args) throws Exception {
+
+  /*
+   *    public static void main(String[] args) throws Exception {
         lerCSV l = new lerCSV();
         l.lerArquivoCSV();
     } 
-*/
+   */
+
 }

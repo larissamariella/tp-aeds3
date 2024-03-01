@@ -2,20 +2,16 @@ import java.io.*;
 import java.util.*;
 
 public class lerByte {
-    void lerArquivoByte() throws IOException{
-        RandomAccessFile arq = new RandomAccessFile("arquivoByte.db", "rw");
-
+    public static void lerArquivoByte(RandomAccessFile arq) throws IOException{
         int ultimoId = arq.readInt();
        
         while (arq.getFilePointer() < arq.length()) {
             Livro livro = lerLivro(arq);
             Livro.exibir(livro);
-            System.out.println();
         }
-        arq.close();
     }
 
-    Livro lerLivro(RandomAccessFile arq) throws IOException {
+    public static Livro lerLivro(RandomAccessFile arq) throws IOException {
         Livro livro = new Livro();
        
         char lapide = arq.readChar();
@@ -26,18 +22,5 @@ public class lerByte {
         livro.fromByteArray(ba);
         return livro;
     }
-   
-    public static void main(String[] args) {
-        System.out.println("ARQUIVO BYTES");
-        lerByte l = new lerByte();
-      
-        try{
-            l.lerArquivoByte();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-    
 
 }
