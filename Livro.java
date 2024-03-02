@@ -4,16 +4,16 @@ import java.util.*;
 
 class Livro {
 
-    int id;
-    String codigo;
-    String titulo;
-    String autor;
-    Float avaliacao;
-    Float preco;
-    boolean kindleUnlimited;
-    long data;
-    String [] nomeCategoria;
-    long dataPublicada;
+    private int id;
+    private String codigo;
+    private String titulo;
+    private String autor;
+    private Float avaliacao;
+    private Float preco;
+    private boolean kindleUnlimited;
+    private long data;
+    private String [] nomeCategoria;
+    private long dataPublicada;
 
     public Livro() {
         this.id = 0;
@@ -39,49 +39,97 @@ class Livro {
         this.nomeCategoria = nomeCategoria;
     }
 
-    public void setId(String id) {
-        this.id = Integer.parseInt(id);
-    }
+    //Setters e Getters
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
-    public void setAvaliacao(String avaliacao) {
-        this.avaliacao = Float.parseFloat(avaliacao);
-    }
-
-    public void setPreco(String preco) {
-        this.preco = Float.parseFloat(preco);
-    }
-
-    public void setKindleUnlimited(String kindleUnlimited) {
-        this.kindleUnlimited = Boolean.parseBoolean(kindleUnlimited);
-    }
-
-    public void setData(String data) {
-        this.data = Util.formatarData(data);
-    }
-
-    public void setNomeCategoria(String[] nomeCategoria) {
-        this.nomeCategoria = new String[nomeCategoria.length];
-        for (int i = 0; i < nomeCategoria.length; i++) {
-           this.nomeCategoria[i] = nomeCategoria[i];
+        // ID
+        public void setId(int id) {
+            this.id = id;
         }
-    }
 
-    public void setDataPublicada(String dataPublicada) {
-        this.dataPublicada = Long.parseLong(dataPublicada);
-    }
-    
+        public int getID(){
+            return this.id;
+        }
+
+        // Codigo
+        public void setCodigo(String codigo){
+            this.codigo = codigo;
+        }
+
+        public String getCodigo(){
+            return this.codigo;
+        }
+
+        // Titulo
+        public void setTitulo(String titulo) {
+            this.titulo = titulo;
+        }
+
+        public String getTitulo(){
+            return this.titulo;
+        }
+
+        // Autor
+        public void setAutor(String autor) {
+            this.autor = autor;
+        }
+
+        public String getAutor(){
+            return this.autor;
+        }
+
+        // Avaliação
+        public void setAvaliacao(String avaliacao) {
+            this.avaliacao = Float.parseFloat(avaliacao);
+        }
+
+        public float getAvaliacao(){
+            return this.avaliacao;
+        }
+
+        // Preço
+        public void setPreco(Float preco) {
+            this.preco = preco;
+        }
+
+        public float getPreco(){
+            return this.preco;
+        }
+
+        // Kindle Unlimited
+        public void setKindleUnlimited(String kindleUnlimited) {
+            this.kindleUnlimited = Boolean.parseBoolean(kindleUnlimited);
+        }
+
+        public boolean getKindleUnlimited(){
+            return this.kindleUnlimited;
+        }
+
+        // Data
+        public void setData(long data) {
+            this.data = data;
+        }
+
+        // Nome Categoria
+        public void setNomeCategoria(String[] nomeCategoria) {
+            this.nomeCategoria = new String[nomeCategoria.length];
+            for (int i = 0; i < nomeCategoria.length; i++) {
+            this.nomeCategoria[i] = nomeCategoria[i];
+            }
+        }
+
+        public String [] getNomeCategoria() {
+            return this.nomeCategoria;
+        }
+
+        // Data publicada
+        public void setDataPublicada(String dataPublicada) {
+            this.dataPublicada = Long.parseLong(dataPublicada);
+        }
+
+        public long getDataPublicada(){
+            return this.dataPublicada;
+        }
+        
     @Override
     public String toString() {
         return "ID: " + id + "\n" +
@@ -102,17 +150,17 @@ class Livro {
     }
 
     public static void exibir(Livro livro) {
-        System.out.print("ID: " + livro.id + "\n" +
-        "Código: " + livro.codigo + "\n" +
-        "Título: " + livro.titulo + "\n" +
-        "Autor: " + livro.autor + "\n" +
-        "Avaliação: " + livro.avaliacao + "\n" +
-        "Preço: " + livro.preco + "\n" +
-        "Kindle Unlimited: " + livro.kindleUnlimited + "\n" +
-        "Data: " + livro.data + "\n" +
+        System.out.print("ID: " + livro.getID() + "\n" +
+        "Código: " + livro.getCodigo() + "\n" +
+        "Título: " + livro.getTitulo() + "\n" +
+        "Autor: " + livro.getAutor() + "\n" +
+        "Avaliação: " + livro.getAvaliacao() + "\n" +
+        "Preço: " + livro.getPreco() + "\n" +
+        "Kindle Unlimited: " + livro.getKindleUnlimited() + "\n" +
+        "Data: " + livro.getData() + "\n" +
         "Nome da Categoria: ");
-        for (int i = 0; i <livro.nomeCategoria.length; i++) {
-            System.out.print(livro.nomeCategoria[i] + " ");
+        for (int i = 0; i <livro.getNomeCategoria().length; i++) {
+            System.out.print(livro.getNomeCategoria()[i] + " ");
         }
         System.out.println("\n");
     }
@@ -144,6 +192,7 @@ class Livro {
 
         id = dis.readInt();
         codigo = dis.readUTF();
+    
         titulo = dis.readUTF();
         autor = dis.readUTF();
         avaliacao = dis.readFloat();
@@ -160,8 +209,12 @@ class Livro {
     public Livro(byte [] ba) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
-
+        
+        
+        System.out.println("reach");
+        System.out.println(ba);
         id = dis.readInt();
+        System.out.println(id);
         codigo = dis.readUTF();
         titulo = dis.readUTF();
         autor = dis.readUTF();
