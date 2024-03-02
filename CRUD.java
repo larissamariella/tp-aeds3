@@ -72,7 +72,22 @@ public class CRUD {
 
     void listarLivros(RandomAccessFile arq) throws IOException {
         arq.seek(0);
-        lerByte.lerArquivoByte(arq);
+        int ultimoID = arq.readInt();
+        Livro livro = new Livro();
+
+        while (arq.getFilePointer() < arq.length()) {
+            char lapide = arq.readChar();
+            int tamanho = arq.readInt();
+
+            if (lapide != '*') {
+                byte[] ba = new byte[tamanho];
+                arq.read(ba);
+                livro = new Livro(ba);
+                Livro.exibir(livro);
+            } else {
+                arq.seek(arq.getFilePointer() + tamanho);
+            }
+        }
     }
 
     Livro buscarLivro(int id, RandomAccessFile arq) throws IOException {
@@ -179,9 +194,10 @@ public class CRUD {
     void atualizarLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
         long posicaoLivro = Util.posicaoLivro(id, arq);
-        arq.seek(posicaoLivro);
 
+        arq.seek(posicaoLivro);
         Livro livro = new Livro();
+
         char lapide = arq.readChar();
         int tamanho = arq.readInt();
 
@@ -189,7 +205,8 @@ public class CRUD {
             byte[] ba = new byte[tamanho];
             arq.read(ba);
             livro.fromByteArray(ba);
-            System.out.println();
+            System.out.println("exibir livro");
+            Livro.exibir(livro);
 
             System.out.println(
                     "\nQual campo do livro você deseja editar?\n1. Código\t2. Título\t3. Autor\t4. Avaliação\t5. Preço\t6. Kindle Unlimited\t7. Data \t8. Nome da Categoria");
@@ -265,7 +282,7 @@ public class CRUD {
         lerCSV l = new lerCSV();
 
         try { // a primeira vez que for compilar -> roda esse lerArquivoCSV e depois comenta
-               l.lerArquivoCSV(); // ele
+              // l.lerArquivoCSV(); // ele
             menu();
         } catch (IOException e) {
             e.printStackTrace();
