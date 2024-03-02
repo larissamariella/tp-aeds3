@@ -281,7 +281,7 @@ public class CRUD {
                     System.out.println("Avaliação inválida. Por favor, informe uma nota entre 1.00 e 5.00: ");
                 }
             }catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, informe um número válido");
+                System.out.println("Entrada inválida. Por favor, informe um número válido entre 1.00 e 5.00: ");
             }
         }
     }
@@ -306,9 +306,11 @@ public class CRUD {
             kindleUnlimited = kindleUnlimited.toUpperCase();
             if (kindleUnlimited.equals("TRUE") || 
                 kindleUnlimited.equals("FALSE") ||
-                kindleUnlimited.equals("SIM") ||
                 kindleUnlimited.equals("NAO")) {
                 livro.setKindleUnlimited(kindleUnlimited);
+                break;
+            } else if (kindleUnlimited.equals("SIM")){
+                livro.setKindleUnlimited("TRUE");
                 break;
             } else {
                 System.out.println("Informe uma entrada válida, True ou False");
@@ -323,6 +325,7 @@ public class CRUD {
             String data = scan.nextLine();
             long aux;
             aux = Util.formatarData(data);
+            System.out.println(aux);
             livro.setData(aux);
             break;
             } catch (Exception e){

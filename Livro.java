@@ -109,6 +109,10 @@ class Livro {
             this.data = data;
         }
 
+        public long getData(){
+            return this.data;
+        }
+
         // Nome Categoria
         public void setNomeCategoria(String[] nomeCategoria) {
             this.nomeCategoria = new String[nomeCategoria.length];
@@ -143,11 +147,11 @@ class Livro {
         "Nome da Categoria: " + nomeCategoria + "\n";
     }
 
-    public String getData(){
+/*     public String getData(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = dateFormat.format(data);
         return dateString;
-    }
+    } */
 
     public static void exibir(Livro livro) {
         System.out.print("ID: " + livro.getID() + "\n" +
@@ -209,12 +213,7 @@ class Livro {
     public Livro(byte [] ba) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
-        
-        
-        System.out.println("reach");
-        System.out.println(ba);
         id = dis.readInt();
-        System.out.println(id);
         codigo = dis.readUTF();
         titulo = dis.readUTF();
         autor = dis.readUTF();
