@@ -16,7 +16,7 @@ public class lerCSV {
             livro = lerStringLivro(str, livro, ultimoID);
             ultimoID ++;
             Util.escreverLivro(livro, arqByte);
-            Livro.exibir(livro);
+            //Livro.exibir(livro);
         }
         arq.close();
         arqByte.close();
@@ -33,8 +33,8 @@ public class lerCSV {
         indice = lerKindleUnlimited(str, livro, indice);
         indice = lerData(str, livro, indice);
         lerCategoria(str, livro, indice);
-        Livro.exibir(livro);
-        System.out.println();
+        //Livro.exibir(livro);
+        //System.out.println();
         return livro;
     }
 
@@ -80,7 +80,7 @@ public class lerCSV {
             posicao = aux.indexOf('"', posicaoInicial + 1);
             autor = aux.substring(posicaoInicial + 1, posicao);
             posicao = i + autor.length() + 1;
-            System.out.println("aux = " + autor.length() );
+           // System.out.println("aux = " + autor.length() );
         } 
         else {
             posicao = str.indexOf(',', i + 1);

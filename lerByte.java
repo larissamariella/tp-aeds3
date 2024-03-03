@@ -7,7 +7,9 @@ public class lerByte {
        
         while (arq.getFilePointer() < arq.length()) {
             Livro livro = lerLivro(arq);
+           if(livro!=null){
             Livro.exibir(livro);
+           }
         }
     }
 
@@ -16,10 +18,14 @@ public class lerByte {
        
         char lapide = arq.readChar();
         int tamanho = arq.readInt();
-        byte[] ba = new byte[tamanho];
-        arq.read(ba);
 
-        livro.fromByteArray(ba);
+        if(lapide != '*'){
+            byte[] ba = new byte[tamanho];
+            arq.read(ba);
+            livro = livro.fromByteArray(ba);
+        }else{
+            livro = null;
+        }
         return livro;
     }
 
