@@ -1,9 +1,8 @@
 import java.io.*;
-import java.util.*;
 
 public class LerByte {
     public static void lerArquivoByte(RandomAccessFile arq) throws IOException{
-        int ultimoId = arq.readInt();
+        arq.readInt();
        
         while (arq.getFilePointer() < arq.length()) {
             Livro livro = lerLivro(arq);

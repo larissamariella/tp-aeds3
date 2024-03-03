@@ -23,7 +23,7 @@ public class LerCSV {
 
     Livro lerStringLivro(String str, Livro livro, int ultimoID){
         int indice = 0;
-        livro.id = ultimoID + 1;
+        livro.setId(ultimoID+1);
         indice = lerCodigo(str, livro);
         indice = lerTitulo(str, livro, indice);
         indice = lerAutor(str, livro, indice);
@@ -40,7 +40,7 @@ public class LerCSV {
     int lerCodigo(String str, Livro livro) {
         int posicao = str.indexOf(',');
         String codigo = str.substring(0, posicao);
-        livro.codigo = codigo;
+        livro.setCodigo(codigo);
         return posicao;
      }
 
@@ -65,7 +65,7 @@ public class LerCSV {
             posicao = str.indexOf(',', i + 1);
             titulo = str.substring(i + 1, posicao);
         }
-        livro.titulo = titulo;
+        livro.setTitulo(titulo);
         return posicao;
     }
 
@@ -85,7 +85,7 @@ public class LerCSV {
             posicao = str.indexOf(',', i + 1);
             autor = str.substring(i + 1, posicao);
         }
-        livro.autor = autor;
+        livro.setAutor(autor);
         return posicao;
     }
 
@@ -102,22 +102,21 @@ public class LerCSV {
             posicao = str.indexOf(',', i + 1);
             avaliacao = str.substring(i + 1, posicao);
         }
-
-        livro.avaliacao = Float.parseFloat(avaliacao);
+        livro.setAvaliacao(Float.parseFloat(avaliacao));
         return posicao;
     }
 
     int lerPreco(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String preco = str.substring(i + 1, posicao);
-        livro.preco = Float.parseFloat(preco);
+        livro.setPreco(Float.parseFloat(preco));
         return posicao;
     }
 
     int lerKindleUnlimited(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String kindleUnlimited = str.substring(i + 1, posicao);
-        livro.kindleUnlimited = (kindleUnlimited.equals("True")) ? true : false;
+        livro.setKindleUnlimited(Boolean.parseBoolean(kindleUnlimited));
         return posicao;
     }
 
@@ -125,7 +124,7 @@ public class LerCSV {
         int posicao = str.indexOf(',', i + 1);
         String data = str.substring(i + 1, posicao);
 
-        if (!data.equals("")) livro.data = Util.formatarData(data);
+        if (!data.equals("")) livro.setData(Util.formatarData(data));
         return posicao;
     }
 
@@ -133,10 +132,11 @@ public class LerCSV {
         String categorias = str.substring(i + 1, str.length());
         String [] categoria = categorias.split(" & ",-1);
 
-        livro.nomeCategoria = new String[categoria.length];
+        String [] nomeCategoria = new String[categoria.length];
         for (int j = 0; j < categoria.length; j++) {
-            livro.nomeCategoria[j] = categoria[j];
+            nomeCategoria[j] = categoria[j];
         }
+        livro.setNomeCategoria(nomeCategoria);
     }
     
 
