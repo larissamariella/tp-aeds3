@@ -1,5 +1,8 @@
 # Trabalho Prático 1 - Algoritmo e Estrutura de Dados 3
 
+## Repositório Git do programa
+[Git: Trabalho Prático 1 - AEDs III](https://github.com/larissamariella/tp-aeds3/tree/master)
+
 ## Descrição
 - O trabalho consiste no desenvolvimento um software que permita a representação de entidades(objetos) em registros, bem como o armazenamento em memória secundária e manipulação através de acesso sequencial.
 
