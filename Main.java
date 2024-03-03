@@ -1,18 +1,9 @@
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 public class Main {
     public static void main(String[] args) {
-        lerCSV CSV = new lerCSV();
-
-         lerByte Byte = new lerByte();
-      
-        try{
-            CSV.lerArquivoCSV();
-            RandomAccessFile arqByte = new RandomAccessFile("ARQUIVO.db", "rw");
-            lerByte.lerArquivoByte(arqByte);
+        try{   
+            CRUD.menu();
         }
-        catch(IOException e){
+        catch(Exception e){
             e.printStackTrace();
         }
     }

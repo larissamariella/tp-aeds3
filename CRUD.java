@@ -7,14 +7,37 @@ public class CRUD {
     static Scanner scan = new Scanner(System.in);
 
     public static void menu() throws IOException {
-        RandomAccessFile arq = new RandomAccessFile("ARQUIVO.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
 
         CRUD crud = new CRUD();
+        int opcao; 
+        LerCSV csv = new LerCSV();
 
-        int opcao;
+        System.out.println("Como deseja iniciar a base de dados?");
+        System.out.println("1. Continuar em arquivo existente\t2. Iniciar um novo arquivo");
+        int inicio = scan.nextInt();
+        switch (inicio) {
+            case 2:
+                LoadingAnimation loadingAnimation = new LoadingAnimation();
+                Thread loadingThread = new Thread(loadingAnimation);
+                loadingThread.start(); 
+                try{
+                    csv.lerArquivoCSV();
+                } finally {
+                    loadingAnimation.stop();
+                    try {
+                        loadingThread.join(); // Espera a thread de animação terminar
+                    } catch (InterruptedException e) {
+                        e.printStackTrace(); // Trate a exceção ou propague para cima
+                    }
+                }
+                break;
+            default:
+                break;
+        }
 
         do {
-            System.out.println("╔═════════════════╗");
+            System.out.println("\n╔═════════════════╗");
             System.out.println("║ +-- M E N U --+ ║");
             System.out.println("╚═════════════════╝");
             System.out.println("1. Adicionar Livro");
@@ -76,12 +99,27 @@ public class CRUD {
 
     void listarLivros(RandomAccessFile arq) throws IOException {
         arq.seek(0);
-        lerByte.lerArquivoByte(arq);
+        arq.readInt();
+        Livro livro = new Livro();
+
+        while (arq.getFilePointer() < arq.length()) {
+            char lapide = arq.readChar();
+            int tamanho = arq.readInt();
+
+            if (lapide != '*') {
+                byte[] ba = new byte[tamanho];
+                arq.read(ba);
+                livro = new Livro(ba);
+                Livro.exibir(livro);
+            } else {
+                arq.seek(arq.getFilePointer() + tamanho);
+            }
+        }
     }
 
     Livro buscarLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
-        int ultimoID = arq.readInt();
+        arq.readInt();
         Livro livro = new Livro();
         boolean achou = false;
 
@@ -127,7 +165,7 @@ public class CRUD {
         System.out.print("Informe o Preço do livro: ");
         validarPreco(livro);
 
-        System.out.print("O livro possui Kindle Unlimited? (true/false): ");
+        System.out.print("Informe se possui Kindle Unlimited [s/n];[sim/nao];[t/f];[true/false]:");
         validarKindleUnlimited(livro);
 
         System.out.print("Informe a Data do livro (yyyy-mm-dd): ");
@@ -151,8 +189,8 @@ public class CRUD {
 
     void removerLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
+        arq.readInt();
 
-        int ultimoID = arq.readInt();
         Livro livro = new Livro();
         boolean achou = false;
 
@@ -193,8 +231,8 @@ public class CRUD {
         if (lapide != '*') {
             byte[] ba = new byte[tamanho];
             arq.read(ba);
-            livro.fromByteArray(ba);
-            System.out.println();
+            livro = livro.fromByteArray(ba);
+            Livro.exibir(livro);
 
             System.out.println(
                     "\nQual campo do livro você deseja editar?\n1. Código\t2. Título\t3. Autor\t4. Avaliação\t5. Preço\t6. Kindle Unlimited\t7. Data \t8. Nome da Categoria");
@@ -222,7 +260,7 @@ public class CRUD {
                     validarPreco(livro);
                 }
                 case 6 -> {
-                    System.out.print("Informe se possui Kindle Unlimited (true/false):");
+                    System.out.print("Informe se possui Kindle Unlimited [s/n];[sim/nao];[t/f];[true/false]:");
                     validarKindleUnlimited(livro);
                 }
                 case 7 -> {
@@ -257,16 +295,15 @@ public class CRUD {
                 arq.writeChar('-');
                 arq.writeInt(tamanho);
                 arq.write(ba);
-                System.out.println("Livro atualizado com sucesso!");
+                System.out.println("\nLivro atualizado com sucesso!");
             }
-
         } else {
             System.out.println("\nLivro não encontrado. :(\r\n");
         }
 
     }
 
-    //Funções de validação
+        //Funções de validação
 
     // Valida a avaliação dada ao livro. Deve ser entre 1.00 e 5.00
     public static void validarAvalicao(Livro livro){
@@ -306,10 +343,14 @@ public class CRUD {
             kindleUnlimited = kindleUnlimited.toUpperCase();
             if (kindleUnlimited.equals("TRUE") || 
                 kindleUnlimited.equals("FALSE") ||
-                kindleUnlimited.equals("NAO")) {
+                kindleUnlimited.equals("NAO") ||
+                kindleUnlimited.equals("F") ||
+                kindleUnlimited.equals("N")) {
                 livro.setKindleUnlimited(kindleUnlimited);
                 break;
-            } else if (kindleUnlimited.equals("SIM")){
+            } else if (kindleUnlimited.equals("SIM") ||
+                       kindleUnlimited.equals("S") ||
+                       kindleUnlimited.equals("T")){
                 livro.setKindleUnlimited("TRUE");
                 break;
             } else {
@@ -332,19 +373,6 @@ public class CRUD {
                 System.out.println("Formato de data inválido. Por favor, informe uma data para o livro no formato yyyy-mm-dd: ");
             }
         }
-    }
-
-
-    public static void main(String[] args) {
-        lerCSV l = new lerCSV();
-
-        try { // a primeira vez que for compilar -> roda esse lerArquivoCSV e depois comenta
-              // l.lerArquivoCSV(); // ele
-            menu();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        scan.close();
     }
 
 }

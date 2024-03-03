@@ -1,6 +1,5 @@
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+
 
 class Livro {
 
@@ -190,25 +189,27 @@ class Livro {
         return baos.toByteArray();
     }
 
-    public void fromByteArray(byte [] ba) throws IOException{
+    public Livro fromByteArray(byte[] ba) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 
-        id = dis.readInt();
-        codigo = dis.readUTF();
-    
-        titulo = dis.readUTF();
-        autor = dis.readUTF();
-        avaliacao = dis.readFloat();
-        preco = dis.readFloat();
-        kindleUnlimited = dis.readBoolean();
-        data = dis.readLong();
+        Livro livro = new Livro();
+        livro.id = dis.readInt();
+        livro.codigo = dis.readUTF();
+        livro.titulo = dis.readUTF();
+        livro.autor = dis.readUTF();
+        livro.avaliacao = dis.readFloat();
+        livro.preco = dis.readFloat();
+        livro.kindleUnlimited = dis.readBoolean();
+        livro.data = dis.readLong();
         int tamCategorias = dis.readInt();
-        nomeCategoria = new String[tamCategorias];
+        livro.nomeCategoria = new String[tamCategorias];
         for (int i = 0; i < tamCategorias; i++) {
-            nomeCategoria[i] = dis.readUTF();
+            livro.nomeCategoria[i] = dis.readUTF();
         }
+        return livro;
     }
+
 
     public Livro(byte [] ba) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);

@@ -23,12 +23,10 @@ public class Util {
     }
 
     public static long posicaoLivro(int id, RandomAccessFile arq) throws IOException{
-        int ultimoID = arq.readInt();
-        //System.out.println(ultimoID);
+        arq.readInt();
         Livro livro = new Livro();
         boolean achou = false;
         long posicaoLivro = arq.getFilePointer();
-        //System.out.println(posicaoLivro);
 
         while (arq.getFilePointer() < arq.length() && achou == false) {
             posicaoLivro = arq.getFilePointer();
@@ -41,7 +39,6 @@ public class Util {
                 livro = new Livro(ba);
                 if (livro.getID() == id){
                     achou = true;
-                    //System.out.println(posicaoLivro);
                 }
             } else {
                 arq.seek(arq.getFilePointer() + tamanho);
