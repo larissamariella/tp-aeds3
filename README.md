@@ -8,22 +8,22 @@
   
 ### Atributos da base de dados
 _Foram selecionados alguns atribuitos de interesse na base de dados, como:_
-- Código <span style="color:green">&#x2714;</span>
-- Título <span style="color:green">&#x2714;</span>
-- Autor <span style="color:green">&#x2714;</span>
-- Vendido por <span style="color:red">&#x2717;</span>
-- URL da imagem <span style="color:red">&#x2717;</span>
-- URL do produto <span style="color:red">&#x2717;</span>
-- Avaliação <span style="color:green">&#x2714;</span>
-- N° de reviews <span style="color:red">&#x2717;</span>
-- Preço <span style="color:green">&#x2714;</span>
-- Disponível no Kindle Unlimited <span style="color:green">&#x2714;</span>
-- ID da categoria <span style="color:red">&#x2717;</span>
-- É best seller <span style="color:red">&#x2717;</span>
-- É escolha do editor <span style="color:red">&#x2717;</span>
-- É boa opção de leitura <span style="color:red">&#x2717;</span>
-- Data de publicação <span style="color:green">&#x2714;</span>
-- Nome da(s) categoria(s) <span style="color:green">&#x2714;</span>
+- [x] Código 
+- [x] Título 
+- [x] Autor 
+- Vendido por :x: 
+- URL da imagem :x: 
+- URL do produto :x: 
+- [x] Avaliação 
+- N° de reviews :x: 
+- [x] Preço 
+- [x] Disponível no Kindle Unlimited 
+- ID da categoria :x: 
+- É best seller :x: 
+- É escolha do editor :x: 
+- É boa opção de leitura :x: 
+- [x] Data de publicação 
+- [x] Nome da(s) categoria(s) 
 
 - **ID na base de dados &#8594; Adicionado**
 
@@ -40,7 +40,7 @@ _Foram selecionados alguns atribuitos de interesse na base de dados, como:_
     - Autor: Uma String que armazena o nome do Autor do livro.
     - Avaliação: Float que armazena a avaliação do livro (entre 1 e 5 estrelas).
     - Preço: Float que armazena o valor do livro.
-    - KindleUnlimited: Boolean que armazena se o livro está ou não disponível no Kindle Unlimited
+    - KindleUnlimited: Boolean que armazena se o livro está ou não disponível no Kindle Unlimited.
     - Data: long que armazena o tempo em segundos desde o início do Java Epoch até a data de publicação.
     - Nome categoria: Array de String que informa o nome das categorias do livro.
 
