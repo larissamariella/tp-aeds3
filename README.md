@@ -8,22 +8,22 @@
   
 ### Atributos da base de dados
 _Foram selecionados alguns atribuitos de interesse na base de dados, como:_
-- [x] Código 
-- [x] Título 
-- [x] Autor 
+- Código <span style="color:green">&#x2714;</span>
+- Título <span style="color:green">&#x2714;</span>
+- Autor <span style="color:green">&#x2714;</span>
 - Vendido por :x: 
 - URL da imagem :x: 
 - URL do produto :x: 
-- [x] Avaliação 
+- Avaliação <span style="color:green">&#x2714;</span>
 - N° de reviews :x: 
-- [x] Preço 
-- [x] Disponível no Kindle Unlimited 
+- Preço <span style="color:green">&#x2714;</span>
+- Disponível no Kindle Unlimited <span style="color:green">&#x2714;</span>
 - ID da categoria :x: 
 - É best seller :x: 
 - É escolha do editor :x: 
 - É boa opção de leitura :x: 
-- [x] Data de publicação 
-- [x] Nome da(s) categoria(s) 
+- Data de publicação <span style="color:green">&#x2714;</span>
+- Nome da(s) categoria(s) <span style="color:green">&#x2714;</span>
 
 - **ID na base de dados &#8594; Adicionado**
 
