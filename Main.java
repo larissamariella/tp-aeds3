@@ -2,15 +2,10 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        lerCSV CSV = new lerCSV();
-
-         lerByte Byte = new lerByte();
-      
         try{
-            CSV.lerArquivoCSV();
-            Byte.lerArquivoByte();
+            CRUD.menu();
         }
-        catch(IOException e){
+        catch(Exception e){
             e.printStackTrace();
         }
     }

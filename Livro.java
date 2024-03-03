@@ -82,27 +82,8 @@ class Livro {
     public void setDataPublicada(String dataPublicada) {
         this.dataPublicada = Long.parseLong(dataPublicada);
     }
-
-    @Override
-    public String toString() {
-        return "ID: " + id + "\n" +
-                "Código: " + codigo + "\n" +
-                "Título: " + titulo + "\n" +
-                "Autor: " + autor + "\n" +
-                "Avaliação: " + avaliacao + "\n" +
-                "Preço: " + preco + "\n" +
-                "Kindle Unlimited: " + kindleUnlimited + "\n" +
-                "Data: " + getData() + "\n" +
-                "Nome da Categoria: " + nomeCategoria + "\n";
-    }
-
-    public String getData() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = dateFormat.format(data);
-        return dateString;
-    }
-
-    public static void exibir(Livro livro) {
+    
+    public static void exibir(Livro livro) { // mudar o livro.id para livro.getID()
         System.out.print("ID: " + livro.id + "\n" +
                 "Código: " + livro.codigo + "\n" +
                 "Título: " + livro.titulo + "\n" +
@@ -134,8 +115,7 @@ class Livro {
         for (int i = 0; i < nomeCategoria.length; i++) {
             dos.writeUTF(nomeCategoria[i]);
         }
-        // dos.writeUTF(nomeCategoria);
-
+        
         return baos.toByteArray();
     }
 

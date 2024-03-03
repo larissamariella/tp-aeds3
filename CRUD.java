@@ -7,14 +7,25 @@ public class CRUD {
     static Scanner scan = new Scanner(System.in);
 
     public static void menu() throws IOException {
-        RandomAccessFile arq = new RandomAccessFile("ARQUIVO.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
 
         CRUD crud = new CRUD();
-
         int opcao;
+        LerCSV csv = new LerCSV();
+
+        System.out.println("Como deseja iniciar a base de dados?");
+        System.out.println("1. Continuar em arquivo existente\t2. Iniciar um novo arquivo");
+        int inicio = scan.nextInt();
+        switch (inicio) {
+            case 2:
+                csv.lerArquivoCSV();
+                break;
+            default:
+                break;
+        }
 
         do {
-            System.out.println("╔═════════════════╗");
+            System.out.println("\n╔═════════════════╗");
             System.out.println("║ +-- M E N U --+ ║");
             System.out.println("╚═════════════════╝");
             System.out.println("1. Adicionar Livro");
@@ -72,7 +83,7 @@ public class CRUD {
 
     void listarLivros(RandomAccessFile arq) throws IOException {
         arq.seek(0);
-        int ultimoID = arq.readInt();
+        arq.readInt();
         Livro livro = new Livro();
 
         while (arq.getFilePointer() < arq.length()) {
@@ -92,7 +103,7 @@ public class CRUD {
 
     Livro buscarLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
-        int ultimoID = arq.readInt();
+        arq.readInt();
         Livro livro = new Livro();
         boolean achou = false;
 
@@ -152,8 +163,8 @@ public class CRUD {
             System.out.print("Informe a Categoria " + (i + 1) + ": ");
             nomeCategoria[i] = scan.nextLine();
         }
-        livro.setNomeCategoria(nomeCategoria);
 
+        livro.setNomeCategoria(nomeCategoria);
         Util.escreverLivro(livro, arq);
         System.out.println("\nLivro adicionado com sucesso!\n");
         Livro.exibir(livro);
@@ -161,8 +172,8 @@ public class CRUD {
 
     void removerLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
+        arq.readInt();
 
-        int ultimoID = arq.readInt();
         Livro livro = new Livro();
         boolean achou = false;
 
@@ -193,19 +204,18 @@ public class CRUD {
 
     void atualizarLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);
+
         long posicaoLivro = Util.posicaoLivro(id, arq);
-
         arq.seek(posicaoLivro);
-        Livro livro = new Livro();
 
+        Livro livro = new Livro();
         char lapide = arq.readChar();
         int tamanho = arq.readInt();
 
         if (lapide != '*') {
             byte[] ba = new byte[tamanho];
             arq.read(ba);
-            livro.fromByteArray(ba);
-            System.out.println("exibir livro");
+            livro = livro.fromByteArray(ba);
             Livro.exibir(livro);
 
             System.out.println(
@@ -269,25 +279,11 @@ public class CRUD {
                 arq.writeChar('-');
                 arq.writeInt(tamanho);
                 arq.write(ba);
-                System.out.println("Livro atualizado com sucesso!");
+                System.out.println("\nLivro atualizado com sucesso!");
             }
-
         } else {
             System.out.println("\nLivro não encontrado. :(\r\n");
         }
 
     }
-
-    public static void main(String[] args) {
-        lerCSV l = new lerCSV();
-
-        try { // a primeira vez que for compilar -> roda esse lerArquivoCSV e depois comenta
-              // l.lerArquivoCSV(); // ele
-            menu();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        scan.close();
-    }
-
 }
