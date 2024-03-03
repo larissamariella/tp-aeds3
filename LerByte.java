@@ -1,17 +1,8 @@
 import java.io.*;
 
 public class LerByte {
-    public static void lerArquivoByte(RandomAccessFile arq) throws IOException{
-        arq.readInt();
-       
-        while (arq.getFilePointer() < arq.length()) {
-            Livro livro = lerLivro(arq);
-           if(livro!=null){
-            Livro.exibir(livro);
-           }
-        }
-    }
-
+    
+    // Faz a leitura completa do livro, char de lápide, int do tamanho e array de bytes
     public static Livro lerLivro(RandomAccessFile arq) throws IOException {
         Livro livro = new Livro();
        

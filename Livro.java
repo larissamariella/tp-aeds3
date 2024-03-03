@@ -123,21 +123,7 @@ class Livro {
             return this.nomeCategoria;
         }
 
-
-        
-    @Override
-    public String toString() {
-        return "ID: " + id + "\n" +
-        "Código: " + codigo + "\n" +
-        "Título: " + titulo + "\n" +
-        "Autor: " + autor + "\n" +
-        "Avaliação: " + avaliacao + "\n" +
-        "Preço: " + preco + "\n" +
-        "Kindle Unlimited: " + kindleUnlimited + "\n" +
-        "Data: " + getData() + "\n" +
-        "Nome da Categoria: " + nomeCategoria + "\n";
-    }
-
+    // Método para exibir livro
     public static void exibir(Livro livro) {
         System.out.println("ID: " + livro.getID());
         System.out.println("Código: " + livro.getCodigo());
@@ -160,6 +146,7 @@ class Livro {
         System.out.println("\n");
     }
     
+    // Retorna o array de bytes com as informações do livro
     public byte [] toByteArray() throws IOException{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
@@ -179,6 +166,7 @@ class Livro {
         return baos.toByteArray();
     }
 
+    // Retorna objeto livro que foi lido pelo array de bytes
     public Livro fromByteArray(byte[] ba) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
@@ -201,7 +189,7 @@ class Livro {
         return livro;
     }
 
-
+    // Instancia objeto Livro por meio de um array de bites
     public Livro(byte [] ba) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);

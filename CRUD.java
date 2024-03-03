@@ -205,13 +205,13 @@ public class CRUD {
     void atualizarLivro(int id, RandomAccessFile arq) throws IOException {
         arq.seek(0);// Move ponteiro para inicio do arquivo
         long posicaoLivro = Util.posicaoLivro(id, arq); // Busca posição do livro de id informado
-        arq.seek(posicaoLivro); // Mo
+        arq.seek(posicaoLivro); // Move ponteiro para posição do livro na base de dados
 
         Livro livro = new Livro();
         char lapide = arq.readChar();
         int tamanho = arq.readInt();
 
-
+        // Verifica lápide do livro a ser atualizado não está marcado e se encontrou o livro
         if (lapide != '*' && posicaoLivro != 0) {
             byte[] ba = new byte[tamanho];
             arq.read(ba);
@@ -269,16 +269,20 @@ public class CRUD {
                 default -> System.out.println("Escolha inválida.");
             }
 
-            arq.seek(posicaoLivro);
+            arq.seek(posicaoLivro); // Se achou o livro para atualizar ele move novamente para a posição inicial do registro deste livro
             ba = livro.toByteArray();
-            if (ba.length > tamanho) {
+            if (ba.length > tamanho) { 
+                /* Se o novo registro for maior que o tamanho do registro atual do livro, o caracter de lápide
+                é marcado no registro, move o ponteiro para o final do arquivo, escreve o lápide como não marcada,
+                o tamanho do registro e o byteArray que é o próprio registro do livro atualizado
+                */
                 arq.writeChar('*');
                 arq.seek(arq.length());
                 arq.writeChar(' ');
                 arq.writeInt(ba.length);
                 arq.write(ba);
                 System.out.println("Livro movido para o final do arquivo\n");
-            } else {
+            } else { // Caso contrário, não marca a lápide, insere o tamanhono registro e escreve o novo registro atualizado
                 arq.writeChar(' ');
                 arq.writeInt(tamanho);
                 arq.write(ba);

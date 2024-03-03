@@ -1,6 +1,8 @@
 import java.io.*;
 
 public class LerCSV {
+
+    // Inicia a leitura do csv e tambémm, a escrita do arquivo de bytes 
     void lerArquivoCSV() throws IOException {
         String nomeArquivo = "amz kindle books updated.csv";
         RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw");
@@ -15,13 +17,14 @@ public class LerCSV {
             livro = lerStringLivro(str, livro, ultimoID);
             ultimoID ++;
             Util.escreverLivro(livro, arqByte);
-            //Livro.exibir(livro);
         }
         arq.close();
         arqByte.close();
     }
 
+    // Faz a manipulação da linha da bd que foi lida
     Livro lerStringLivro(String str, Livro livro, int ultimoID){
+        // A variável indice controla a posição da linha lida que sera utilizada para cada trecho dos atributos  
         int indice = 0;
         livro.setId(ultimoID+1);
         indice = lerCodigo(str, livro);
@@ -32,11 +35,11 @@ public class LerCSV {
         indice = lerKindleUnlimited(str, livro, indice);
         indice = lerData(str, livro, indice);
         lerCategoria(str, livro, indice);
-        //Livro.exibir(livro);
-        //System.out.println();
         return livro;
     }
 
+
+    // Separa a string referente ao código do livro, e retorna a posição
     int lerCodigo(String str, Livro livro) {
         int posicao = str.indexOf(',');
         String codigo = str.substring(0, posicao);
@@ -44,6 +47,7 @@ public class LerCSV {
         return posicao;
      }
 
+     // Separa a string do titulo e retorna a posição da linha que parou
      int lerTitulo(String str, Livro livro, int i) {
         String titulo = "";
         int posicao = 0;;
@@ -69,6 +73,7 @@ public class LerCSV {
         return posicao;
     }
 
+    //Separa a string do autor, retornando a posição da string que acaba o atributo autor
     int lerAutor(String str, Livro livro, int i) {
         String autor = "";
         int posicao = 0;
@@ -79,7 +84,6 @@ public class LerCSV {
             posicao = aux.indexOf('"', posicaoInicial + 1);
             autor = aux.substring(posicaoInicial + 1, posicao);
             posicao = i + autor.length() + 1;
-           // System.out.println("aux = " + autor.length() );
         } 
         else {
             posicao = str.indexOf(',', i + 1);
@@ -89,6 +93,7 @@ public class LerCSV {
         return posicao;
     }
 
+    // Sepaa a string de avaliação
     int lerAvaliacao(String str, Livro livro, int i) {
         String aux = str.substring(i);
         String avaliacao = "";
@@ -106,6 +111,7 @@ public class LerCSV {
         return posicao;
     }
 
+    // Lê a string referente a um float
     int lerPreco(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String preco = str.substring(i + 1, posicao);
@@ -113,6 +119,7 @@ public class LerCSV {
         return posicao;
     }
 
+    // L}e o trecho da string referente ao boolean
     int lerKindleUnlimited(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String kindleUnlimited = str.substring(i + 1, posicao);
@@ -120,6 +127,7 @@ public class LerCSV {
         return posicao;
     }
 
+    // Separa a string data e converte para long
     int lerData(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String data = str.substring(i + 1, posicao);
@@ -128,6 +136,7 @@ public class LerCSV {
         return posicao;
     }
 
+    // Separa cada categoria de acordo com o separador &
     void lerCategoria(String str, Livro livro, int i){
         String categorias = str.substring(i + 1, str.length());
         String [] categoria = categorias.split(" & ",-1);
@@ -138,13 +147,4 @@ public class LerCSV {
         }
         livro.setNomeCategoria(nomeCategoria);
     }
-    
-
-  /*
-   *    public static void main(String[] args) throws Exception {
-        lerCSV l = new lerCSV();
-        l.lerArquivoCSV();
-    } 
-   */
-
 }
