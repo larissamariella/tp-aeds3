@@ -12,7 +12,6 @@ class Livro {
     private boolean kindleUnlimited;
     private long data;
     private String [] nomeCategoria;
-    private long dataPublicada;
 
     public Livro() {
         this.id = 0;
@@ -77,8 +76,8 @@ class Livro {
         }
 
         // Avaliação
-        public void setAvaliacao(String avaliacao) {
-            this.avaliacao = Float.parseFloat(avaliacao);
+        public void setAvaliacao(Float avaliacao) {
+            this.avaliacao = avaliacao;
         }
 
         public float getAvaliacao(){
@@ -95,8 +94,8 @@ class Livro {
         }
 
         // Kindle Unlimited
-        public void setKindleUnlimited(String kindleUnlimited) {
-            this.kindleUnlimited = Boolean.parseBoolean(kindleUnlimited);
+        public void setKindleUnlimited(Boolean kindleUnlimited) {
+            this.kindleUnlimited = kindleUnlimited;
         }
 
         public boolean getKindleUnlimited(){
@@ -124,14 +123,7 @@ class Livro {
             return this.nomeCategoria;
         }
 
-        // Data publicada
-        public void setDataPublicada(String dataPublicada) {
-            this.dataPublicada = Long.parseLong(dataPublicada);
-        }
 
-        public long getDataPublicada(){
-            return this.dataPublicada;
-        }
         
     @Override
     public String toString() {
@@ -146,23 +138,23 @@ class Livro {
         "Nome da Categoria: " + nomeCategoria + "\n";
     }
 
-/*     public String getData(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = dateFormat.format(data);
-        return dateString;
-    } */
-
     public static void exibir(Livro livro) {
-        System.out.print("ID: " + livro.getID() + "\n" +
-        "Código: " + livro.getCodigo() + "\n" +
-        "Título: " + livro.getTitulo() + "\n" +
-        "Autor: " + livro.getAutor() + "\n" +
-        "Avaliação: " + livro.getAvaliacao() + "\n" +
-        "Preço: " + livro.getPreco() + "\n" +
-        "Kindle Unlimited: " + livro.getKindleUnlimited() + "\n" +
-        "Data: " + livro.getData() + "\n" +
-        "Nome da Categoria: ");
-        for (int i = 0; i <livro.getNomeCategoria().length; i++) {
+        System.out.println("ID: " + livro.getID());
+        System.out.println("Código: " + livro.getCodigo());
+        System.out.println("Título: " + livro.getTitulo());
+        System.out.println("Autor: " + livro.getAutor());
+        System.out.println("Avaliação: " + livro.getAvaliacao());
+        System.out.println("Preço: " + livro.getPreco());
+        System.out.println("Kindle Unlimited: " + livro.getKindleUnlimited());
+    
+        if (livro.getData() != -1) {
+            System.out.println("Data: " + livro.getData());
+        } else {
+            System.out.println("Data: Não informado");
+        }
+    
+        System.out.print("Nome da Categoria: ");
+        for (int i = 0; i < livro.getNomeCategoria().length; i++) {
             System.out.print(livro.getNomeCategoria()[i] + " ");
         }
         System.out.println("\n");
@@ -184,8 +176,6 @@ class Livro {
         for (int i = 0; i < nomeCategoria.length; i++) {
             dos.writeUTF(nomeCategoria[i]);
         }
-        //dos.writeUTF(nomeCategoria);
-
         return baos.toByteArray();
     }
 
@@ -194,19 +184,20 @@ class Livro {
         DataInputStream dis = new DataInputStream(bais);
 
         Livro livro = new Livro();
-        livro.id = dis.readInt();
-        livro.codigo = dis.readUTF();
-        livro.titulo = dis.readUTF();
-        livro.autor = dis.readUTF();
-        livro.avaliacao = dis.readFloat();
-        livro.preco = dis.readFloat();
-        livro.kindleUnlimited = dis.readBoolean();
-        livro.data = dis.readLong();
+        livro.setId(dis.readInt());
+        livro.setCodigo(dis.readUTF());
+        livro.setTitulo(dis.readUTF());
+        livro.setAutor(dis.readUTF());
+        livro.setAvaliacao(dis.readFloat());
+        livro.setPreco(dis.readFloat());
+        livro.setKindleUnlimited(dis.readBoolean());
+        livro.setData(dis.readLong());
         int tamCategorias = dis.readInt();
-        livro.nomeCategoria = new String[tamCategorias];
+        String [] nomeCategoria = new String[tamCategorias];
         for (int i = 0; i < tamCategorias; i++) {
-            livro.nomeCategoria[i] = dis.readUTF();
+            nomeCategoria[i] = dis.readUTF();
         }
+        livro.setNomeCategoria(nomeCategoria);
         return livro;
     }
 

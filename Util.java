@@ -4,24 +4,27 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Util {
-        public static long formatarData(String dateString) {
+    // Função para formatar String da data em formato long a partir da data inicial java 
+    public static long formatarData(String dateString) {
         DateTimeFormatter mascara = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate data = LocalDate.parse(dateString, mascara);
         Instant instant = data.atStartOfDay().toInstant(ZoneOffset.UTC);
         return instant.getEpochSecond();
     }
 
+    // Escreve registro do livro
     public static void escreverLivro(Livro livro, RandomAccessFile arq) throws IOException {
         arq.seek(0);
         arq.writeInt(livro.getID());
         arq.seek(arq.length());
 
         byte[] ba = livro.toByteArray();
-        arq.writeChar('-');
+        arq.writeChar(' ');
         arq.writeInt((ba.length));
         arq.write(ba);
     }
-
+    
+    // Função que retorna posição do livro
     public static long posicaoLivro(int id, RandomAccessFile arq) throws IOException{
         arq.readInt();
         Livro livro = new Livro();
@@ -44,7 +47,7 @@ public class Util {
                 arq.seek(arq.getFilePointer() + tamanho);
             }
         }
-        if (achou == false) livro = null;
+        if (achou == false) posicaoLivro = 0;
         return posicaoLivro;
     }
 }

@@ -102,8 +102,7 @@ public class LerCSV {
             posicao = str.indexOf(',', i + 1);
             avaliacao = str.substring(i + 1, posicao);
         }
-
-        livro.setAvaliacao(avaliacao);
+        livro.setAvaliacao(Float.parseFloat(avaliacao));
         return posicao;
     }
 
@@ -117,7 +116,7 @@ public class LerCSV {
     int lerKindleUnlimited(String str, Livro livro, int i) {
         int posicao = str.indexOf(',', i + 1);
         String kindleUnlimited = str.substring(i + 1, posicao);
-        livro.setKindleUnlimited(kindleUnlimited);
+        livro.setKindleUnlimited(Boolean.parseBoolean(kindleUnlimited));
         return posicao;
     }
 

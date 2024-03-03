@@ -7,34 +7,16 @@ public class CRUD {
     static Scanner scan = new Scanner(System.in);
 
     public static void menu() throws IOException {
-        RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
+        System.out.println("╔══════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                   Bem-vindo à Base de Dados da                       ║");
+        System.out.println("║                  Amazon Kindle Unlimited Books!                      ║");
+        System.out.println("║        Explore uma vasta coleção de livros no Kindle Unlimited       ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════╝");
+        
 
+        RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
         CRUD crud = new CRUD();
         int opcao; 
-        LerCSV csv = new LerCSV();
-
-        System.out.println("Como deseja iniciar a base de dados?");
-        System.out.println("1. Continuar em arquivo existente\t2. Iniciar um novo arquivo");
-        int inicio = scan.nextInt();
-        switch (inicio) {
-            case 2:
-                LoadingAnimation loadingAnimation = new LoadingAnimation();
-                Thread loadingThread = new Thread(loadingAnimation);
-                loadingThread.start(); 
-                try{
-                    csv.lerArquivoCSV();
-                } finally {
-                    loadingAnimation.stop();
-                    try {
-                        loadingThread.join(); // Espera a thread de animação terminar
-                    } catch (InterruptedException e) {
-                        e.printStackTrace(); // Trate a exceção ou propague para cima
-                    }
-                }
-                break;
-            default:
-                break;
-        }
 
         do {
             System.out.println("\n╔═════════════════╗");
@@ -98,56 +80,58 @@ public class CRUD {
     }
 
     void listarLivros(RandomAccessFile arq) throws IOException {
-        arq.seek(0);
-        arq.readInt();
+        arq.seek(0); // Move ponteiro para inicio do arquivo
+        arq.readInt(); // Lê ultimo id (Quantidade de livros na base de dados)
         Livro livro = new Livro();
 
+        // Percorre todo o arquivo exibindo livro por livro
         while (arq.getFilePointer() < arq.length()) {
             char lapide = arq.readChar();
             int tamanho = arq.readInt();
 
-            if (lapide != '*') {
+            if (lapide != '*') { // Checa se livro não foi removido ou atualizado por um registro maior
                 byte[] ba = new byte[tamanho];
                 arq.read(ba);
                 livro = new Livro(ba);
                 Livro.exibir(livro);
-            } else {
+            } else { // Pula o registro do livro caso esteja marcado com a lápide
                 arq.seek(arq.getFilePointer() + tamanho);
             }
         }
     }
 
     Livro buscarLivro(int id, RandomAccessFile arq) throws IOException {
-        arq.seek(0);
-        arq.readInt();
+        arq.seek(0);// Move ponteiro para inicio do arquivo
+        arq.readInt();// Lê ultimo id (Quantidade de livros na base de dados)
         Livro livro = new Livro();
         boolean achou = false;
 
+        // Percorre todo o arquivo até achar o livro de id informado
         while (arq.getFilePointer() < arq.length() && achou == false) {
             char lapide = arq.readChar();
             int tamanho = arq.readInt();
 
-            if (lapide != '*') {
+            if (lapide != '*') { // Checa se livro não foi removido ou atualizado por um registro maior
                 byte[] ba = new byte[tamanho];
                 arq.read(ba);
                 livro = new Livro(ba);
-                if (livro.getID() == id)
+                if (livro.getID() == id) // Achou o livro
                     achou = true;
-            } else {
+            } else {// Pula o registro do livro caso esteja marcado com a lápide
                 arq.seek(arq.getFilePointer() + tamanho);
             }
-        }
-        if (achou == false)
+        } 
+        if (achou == false) // Retorna null caso não encontre o livro
             livro = null;
         return livro;
     }
 
     void adicionarLivro(RandomAccessFile arq) throws IOException {
-        arq.seek(0);
-        int ultimoID = arq.readInt();
+        arq.seek(0);// Move ponteiro para inicio do arquivo
+        int ultimoID = arq.readInt(); // Lê ultimo id (Quantidade de livros na base de dados)
         Livro livro = new Livro();
         
-        livro.setId(ultimoID+1);
+        livro.setId(ultimoID+1); // Define ID para o novo livro como ultimoID + 1
 
         System.out.print("Informe o Código do livro: ");
         livro.setCodigo(scan.nextLine());
@@ -160,7 +144,6 @@ public class CRUD {
 
         System.out.print("Informe a Avaliação do livro: ");
         validarAvalicao(livro);
-
 
         System.out.print("Informe o Preço do livro: ");
         validarPreco(livro);
@@ -182,35 +165,35 @@ public class CRUD {
         }
         livro.setNomeCategoria(nomeCategoria);
 
-        Util.escreverLivro(livro, arq);
+        Util.escreverLivro(livro, arq); // Chama função para inserir novo livro
         System.out.println("\nLivro adicionado com sucesso!\n");
         Livro.exibir(livro);
     }
 
     void removerLivro(int id, RandomAccessFile arq) throws IOException {
-        arq.seek(0);
-        arq.readInt();
+        arq.seek(0);// Move ponteiro para inicio do arquivo
+        arq.readInt();// Lê ultimo id (Quantidade de livros na base de dados)
 
         Livro livro = new Livro();
         boolean achou = false;
-
+        // Percorre todo o arquivo até achar o livro de id informado
         while (arq.getFilePointer() < arq.length() && achou == false) {
-            long posicaoLapide = arq.getFilePointer();
+            long posicaoLapide = arq.getFilePointer(); // Salva ponteiro para posição da lápide
             char lapide = arq.readChar();
             int tamanho = arq.readInt();
 
-            if (lapide != '*') {
+            if (lapide != '*') {  // Checa se livro não foi removido ou atualizado por um registro maior
                 byte[] ba = new byte[tamanho];
                 arq.read(ba);
                 livro = new Livro(ba);
 
-                if (livro.getID() == id) {
+                if (livro.getID() == id) { 
                     arq.seek(posicaoLapide);
-                    arq.writeChar('*');
+                    arq.writeChar('*'); // Adiciona marcador da lápide caso encontre o livro
                     System.out.println("\nLivro de id " + livro.getID() + " removido com sucesso!");
                     achou = true;
                 }
-            } else {
+            } else {// Pula o registro do livro caso esteja marcado com a lápide
                 arq.seek(arq.getFilePointer() + tamanho);
             }
         }
@@ -220,23 +203,27 @@ public class CRUD {
     }
 
     void atualizarLivro(int id, RandomAccessFile arq) throws IOException {
-        arq.seek(0);
-        long posicaoLivro = Util.posicaoLivro(id, arq);
-        arq.seek(posicaoLivro);
+        arq.seek(0);// Move ponteiro para inicio do arquivo
+        long posicaoLivro = Util.posicaoLivro(id, arq); // Busca posição do livro de id informado
+        arq.seek(posicaoLivro); // Mo
 
         Livro livro = new Livro();
         char lapide = arq.readChar();
         int tamanho = arq.readInt();
 
-        if (lapide != '*') {
+
+        if (lapide != '*' && posicaoLivro != 0) {
             byte[] ba = new byte[tamanho];
             arq.read(ba);
             livro = livro.fromByteArray(ba);
+            System.out.println("\n");
             Livro.exibir(livro);
 
             System.out.println(
                     "\nQual campo do livro você deseja editar?\n1. Código\t2. Título\t3. Autor\t4. Avaliação\t5. Preço\t6. Kindle Unlimited\t7. Data \t8. Nome da Categoria");
+            System.out.print("Escolha uma opção: ");
             int escolha = scan.nextInt();
+            
             scan.nextLine();
             switch (escolha) {
                 case 1 -> {
@@ -287,12 +274,12 @@ public class CRUD {
             if (ba.length > tamanho) {
                 arq.writeChar('*');
                 arq.seek(arq.length());
-                arq.writeChar('-');
+                arq.writeChar(' ');
                 arq.writeInt(ba.length);
                 arq.write(ba);
-                System.out.println("Livro movido para o final do arquivo");
+                System.out.println("Livro movido para o final do arquivo\n");
             } else {
-                arq.writeChar('-');
+                arq.writeChar(' ');
                 arq.writeInt(tamanho);
                 arq.write(ba);
                 System.out.println("\nLivro atualizado com sucesso!");
@@ -303,7 +290,7 @@ public class CRUD {
 
     }
 
-        //Funções de validação
+    //Funções de validação
 
     // Valida a avaliação dada ao livro. Deve ser entre 1.00 e 5.00
     public static void validarAvalicao(Livro livro){
@@ -311,8 +298,7 @@ public class CRUD {
             try {
                 float avaliacao = Float.parseFloat(scan.nextLine());
                 if ((avaliacao >= 1 && avaliacao <= 5)) {
-                    String nota = Float.toString(avaliacao);
-                    livro.setAvaliacao(nota);
+                    livro.setAvaliacao(avaliacao);
                     break;
                 } else{
                     System.out.println("Avaliação inválida. Por favor, informe uma nota entre 1.00 e 5.00: ");
@@ -346,12 +332,12 @@ public class CRUD {
                 kindleUnlimited.equals("NAO") ||
                 kindleUnlimited.equals("F") ||
                 kindleUnlimited.equals("N")) {
-                livro.setKindleUnlimited(kindleUnlimited);
+                livro.setKindleUnlimited(Boolean.parseBoolean(kindleUnlimited));
                 break;
             } else if (kindleUnlimited.equals("SIM") ||
                        kindleUnlimited.equals("S") ||
                        kindleUnlimited.equals("T")){
-                livro.setKindleUnlimited("TRUE");
+                livro.setKindleUnlimited(Boolean.parseBoolean(kindleUnlimited));
                 break;
             } else {
                 System.out.println("Informe uma entrada válida, True ou False");
