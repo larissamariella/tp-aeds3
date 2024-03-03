@@ -21,4 +21,30 @@ public class Util {
         arq.writeInt((ba.length));
         arq.write(ba);
     }
+
+    public static long posicaoLivro(int id, RandomAccessFile arq) throws IOException{
+        arq.readInt();
+        Livro livro = new Livro();
+        boolean achou = false;
+        long posicaoLivro = arq.getFilePointer();
+
+        while (arq.getFilePointer() < arq.length() && achou == false) {
+            posicaoLivro = arq.getFilePointer();
+            char lapide = arq.readChar();
+            int tamanho = arq.readInt();
+           
+            if (lapide != '*') {
+                byte[] ba = new byte[tamanho];
+                arq.read(ba);
+                livro = new Livro(ba);
+                if (livro.id == id){
+                    achou = true;
+                }
+            } else {
+                arq.seek(arq.getFilePointer() + tamanho);
+            }
+        }
+        if (achou == false) livro = null;
+        return posicaoLivro;
+    }
 }
