@@ -50,4 +50,31 @@ public class Util {
         if (achou == false) posicaoLivro = 0;
         return posicaoLivro;
     }
+
+    public static boolean palavrasGenericas(String termo){
+        String termoLowerCaseString = termo.toLowerCase();
+        String[] palavrasGenericas = {"and", "is", "or", "the", "it", "that", "to", "of", "the", "by", "for", "in","a", "at", "with","on", "from"};
+        boolean resp = false;
+
+        for (int i = 0; i < palavrasGenericas.length; i++) {
+            if(palavrasGenericas[i].equals(termoLowerCaseString)){
+                resp = true;
+                i = palavrasGenericas.length;
+            }
+        }
+        return resp;
+    }
+
+    public static String formatarTermo(String termo){
+        String [] format = {"(", ")", ":", "'", ",", "."};
+        String novaString = " ";
+
+        for (int i = 0; i < format.length; i++) {
+            if(termo.contains(format[i])){
+                novaString = termo.replace(format[i], "");
+            }
+        }
+
+        return novaString;
+    }
 }
