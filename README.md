@@ -1,4 +1,4 @@
-# Trabalho Prático 1 - Algoritmo e Estrutura de Dados 3
+# Trabalho Prático 2 - Algoritmo e Estrutura de Dados 3
 
 ## Repositório Git do programa
 [Git: Trabalho Prático 1 - AEDs III](https://github.com/larissamariella/tp-aeds3/tree/master)
@@ -46,6 +46,13 @@ _Foram selecionados alguns atribuitos de interesse na base de dados, como:_
     - KindleUnlimited: Boolean que armazena se o livro está ou não disponível no Kindle Unlimited.
     - Data: long que armazena o tempo em segundos desde o início do Java Epoch até a data de publicação.
     - Nome categoria: Array de String que informa o nome das categorias do livro.
+
+## Estruturas de Dados Criadas
+- ArvoreB
+- Hashing Extensível
+  - Consiste em um hashing de tamanho extensível, onde os parametros referente ao pGlobal e o tamanho do bucket são passados na instanciação da classe. 
+  - Foi utilizado pGlobal inicial 1 e bucket de tamanho(ordem) 11.
+- Lista Invertida
 
 ## Vídeo de apresentação
  [Apresentação TP1_AEDs III](https://youtu.be/pnpVqwxPcfI) 

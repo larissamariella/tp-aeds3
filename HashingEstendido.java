@@ -2,19 +2,20 @@
  * Diretório é uma lista com p^2 ponteiros, onde p é um p global e os ponteiros apontam para os buckets
  * Bucket é uma lista de par ponteiro chave, onde cada item no bucket[i] é uma chave id do registro e um ponteiro para o registro.
  */
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
 
 
 
 public class HashingEstendido {
+    RandomAccessFile arq;
     static Scanner scan = new Scanner(System.in);
     int pGlobal;
     int ordem;
     Diretorio dir;
 
-    public HashingEstendido(int P, int Ordem){
+    public HashingEstendido(int P, int Ordem) throws Exception{
+        arq = new RandomAccessFile("arquivo.db", "rw");
         pGlobal = P;
         ordem = Ordem;
         dir = new Diretorio(pGlobal);
@@ -31,15 +32,30 @@ public class HashingEstendido {
         return aux;
     }
 
-    public int getIndexAux(){ // Retorna o index do bucket auxiliar que irá dividir os item do bucket cheio
+    public int power2of(int n){
+        double d = Double.valueOf(n);
+        d = Math.pow(2, d);
+        int aux = (int) d;
+        return aux;
+    }
+
+    public int getIndexAux(int pLocal){ // Retorna o index do bucket auxiliar que irá dividir os item do bucket cheio
+        double d = Double.valueOf(pLocal);
+        d = Math.pow(2, d);
+        int aux = (int) d;
+        return aux;
+    }
+
+    public int getComplementIndex(){
         double d = Double.valueOf(pGlobal-1);
         d = Math.pow(2, d);
         int aux = (int) d;
         return aux;
     }
 
+
     public class Diretorio{
-        List<Bucket> bucketList;
+        private List<Bucket> bucketList;
 
         public Diretorio(int p){
             bucketList = new ArrayList<Bucket>(getTamanhoDir());
@@ -51,25 +67,25 @@ public class HashingEstendido {
     }
 
     public class ParChavePonteiro{
-        int chave;
-        Livro livro;
+        private int chave;
+        private long pos;
 
-        public int getChave(){
+        private int getChave(){
             return this.chave;
         }
-        public void setChave(int key){
+        private void setChave(int key){
             chave = key;
         }
-        public Livro getLivro(){
-            return this.livro;
+        private long getPos(){
+            return this.pos;
         }
-        public void setLivro(Livro book){
-            livro = book;
+        private void setPos(long position){
+            pos = position;
         }
 
-        public ParChavePonteiro(int key, Livro book){
+        private ParChavePonteiro(int key, long position){
             setChave(key);
-            setLivro(book);
+            setPos(position);
         }
     }
 
@@ -103,12 +119,6 @@ public class HashingEstendido {
         }
     }
 
-    public int getLSB(int number, int nLSB){
-        double d = Double.valueOf(nLSB-1);
-        d = Math.pow(2, d);
-        int aux = (int) d;
-        return number & aux;
-    }
 
     public void dobrarDiretorio(){
         this.aumentarPGlobal();
@@ -117,20 +127,32 @@ public class HashingEstendido {
             novoDir.bucketList.set(i, dir.bucketList.get(i & ((getTamanhoDir()/2)-1)));
         }
         dir = novoDir;
-        System.err.println("Buckets após dobrar diretório");
-        showBucketContent();
+        //System.err.println("Buckets após dobrar diretório");
+        //showBucketContent();
     }
 
-    public void tratarBucketCheio(int index, int chave, Livro livro){
+    public void tratarBucketCheio(int index, int chave, long pos){
         Bucket bucket = dir.bucketList.get(index);
         Bucket aux = new Bucket(bucket.pLocal);
-        dir.bucketList.set(index + getIndexAux(), aux); // Zera o bucket auxiliar para dividir chaves com bucketCheio
+        //System.out.println("index = " + index + ", Complement Index = " + getComplementIndex());
+        int indexAux;
+        if (index + getComplementIndex() > power2of(bucket.pLocal)){
+            indexAux = index % getIndexAux(bucket.pLocal); 
+            //System.out.println("indexAux = " + indexAux);
+            dir.bucketList.set(indexAux , aux); // Zera o bucket auxiliar para dividir chaves com bucketCheio
+        } else {
+            dir.bucketList.set(index + getComplementIndex(), aux); // Zera o bucket auxiliar para dividir chaves com bucketCheio
+        }
 
+        if (bucket.pLocal < pGlobal){
+            bucket.aumentarPLocal();
+            aux.aumentarPLocal();
+        }
         for (int i=0; i< bucket.listaChavePonteiro.size();i++){
             int antigaPosição = index;
-            int novaPosição = bucket.listaChavePonteiro.get(i).chave % getTamanhoDir(); // Nova posição para chave
-            /* System.out.println("antigaposição = " + antigaPosição);
-            System.out.println("chave " + bucket.listaChavePonteiro.get(i).chave + " mod " +getTamanhoDir()+ " = " + novaPosição); */
+            int novaPosição = bucket.listaChavePonteiro.get(i).getChave() % getTamanhoDir(); // Nova posição para chave
+            //System.out.println("antigaposição = " + antigaPosição);
+            //System.out.println("chave " + bucket.listaChavePonteiro.get(i).chave + " mod " +getTamanhoDir()+ " = " + novaPosição); 
             ParChavePonteiro p = bucket.listaChavePonteiro.get(i);
             if (novaPosição != antigaPosição){
                 bucket.listaChavePonteiro.remove(p);
@@ -141,49 +163,46 @@ public class HashingEstendido {
 
 
         if (bucket.full()){
-            tratarBucketCheio(index, chave, livro);
+            tratarBucketCheio(index, chave, pos);
         }else if (aux.full()){
             index = dir.bucketList.indexOf(aux);
-            tratarBucketCheio(index, chave, livro);
+            tratarBucketCheio(index, chave, pos);
         } else{
-            adicionarNovoItem(chave, livro);
+            adicionarNovoItem(chave, pos);
         }
 
     }
 
-    public void adicionarNovoItem(int chave, Livro livro){
-        System.out.println();
-        System.out.println("-------------------adicionando novo item-----------------");
+    public void adicionarNovoItem(int chave, long pos){
+        //System.out.println();
+        //System.out.println("-------------------adicionando novo item-----------------");
         int posição = chave % getTamanhoDir();
-        ParChavePonteiro par = new ParChavePonteiro(chave, livro);
+        ParChavePonteiro par = new ParChavePonteiro(chave, pos);
         dir.bucketList.get(posição).listaChavePonteiro.add(par);
-        System.err.println("chave = " + chave + ", posição = " + posição + ", tamanhoDir = " + getTamanhoDir() + ", livro = " + livro + ", id = " + livro.getID());
-    }
-
-    public void verificarPLocal(Bucket bucket){
-        if (bucket.pLocal == pGlobal){
-            bucket.aumentarPLocal();
-        }
+        //System.err.println("chave = " + chave + ", posição = " + posição + ", tamanhoDir = " + getTamanhoDir() + ", pos = " + pos);
     }
 
 
-    public void inserir(int chave, Livro livro){
+
+
+    public void inserir(int chave, Long pos){
         int index = chave % getTamanhoDir();
+        //System.out.println("chave = " + chave + " TamanhoDir = " + getTamanhoDir());
         Bucket bucketAInserir =dir.bucketList.get(index);
         // Checar se cheio
         if (bucketAInserir.full()){
             if (bucketAInserir.pLocal == pGlobal){
-                verificarPLocal(bucketAInserir);
+                bucketAInserir.aumentarPLocal();
                 dobrarDiretorio();
-                tratarBucketCheio(index, chave, livro);
+                tratarBucketCheio(index, chave, pos);
             } else {
-                tratarBucketCheio(index, chave, livro);
+                tratarBucketCheio(index, chave, pos);
             }
             
         } else{
-            adicionarNovoItem(chave, livro);
+            adicionarNovoItem(chave, pos);
         }
-        showBucketContent();
+        //showBucketContent();
     }
 
 
@@ -200,67 +219,147 @@ public class HashingEstendido {
         }
     }
     
-    public void buscar(int id){
-        int index = id % getTamanhoDir();
+    public Livro buscar(int id) throws Exception{
+        
+        int index = ((id) % getTamanhoDir());
         Bucket bucket = dir.bucketList.get(index);
+        long pos = 0;
         Livro livro = null;
         for (int i=0; i < bucket.listaChavePonteiro.size(); i++){
             ParChavePonteiro par = bucket.listaChavePonteiro.get(i);
-            if (par.chave == id){
-                livro = par.livro;
+            if (par.getChave() == id){
+                pos = par.getPos();
+                livro = instanciarLivro(pos, arq);
                 break;
             }else{
                 System.out.println("Não achou");
             }
         }
-        Livro.exibir(livro);
+        return livro;
     }
 
-/*     public int numberToAdd(int index){
-            
-    } */
+    public Livro instanciarLivro(long pos, RandomAccessFile arq) throws Exception{
+        arq.seek(pos); // Move ponteiro para posição do livro na base de dados
+
+        Livro livro = new Livro();
+        char lapide = arq.readChar();
+        int tamanho = arq.readInt();
+
+        // Verifica lápide do livro a ser atualizado não está marcado e se encontrou o livro
+        if (lapide != '*' && pos != 0) {
+            byte[] ba = new byte[tamanho];
+            arq.read(ba);
+            livro = livro.fromByteArray(ba);
+        }
+        return livro;
+    }
+
     
     public void deletar(int id){
         int index = id % getTamanhoDir();
         Bucket bucket = dir.bucketList.get(index);
-        Bucket aux = dir.bucketList.get(getLSB(index, pGlobal));
-
+        for (int i = 0; i < ordem; i++){
+            if(id == bucket.listaChavePonteiro.get(i).getChave()){
+                bucket.listaChavePonteiro.remove(i);
+                break;
+            }
+        }
     }
 
-    public static void main(String[] args) throws IOException{
-        RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
-        CRUD crud = new CRUD();
-        HashingEstendido hashing = new HashingEstendido(1, 3);
-        int option;
-        do {
-            System.out.println(" Inicio ");
-            System.out.println("Selecione uma opção:\n1. Adicionar um número.\n2. Buscar um número. \n3. Deletar um número.\n4. Sair\n");
-            option = scan.nextInt();
-            switch (option) {
-                case 1:
-                    System.out.println("Qual o número que deseja inserir?\n");
-                    int valor = scan.nextInt();
-                    Livro livro = crud.buscarLivro(valor, arq);
-                    hashing.inserir(valor, livro);
-                    break;
-                case 2:
-                    System.out.println("Qual o número que deseja buscar?\n");
-                    valor = scan.nextInt();
-                    hashing.buscar(valor);
-                case 3:
-                    /* System.out.println("Qual o número que deseja deletar?\n");
-                    valor = scan.nextInt();
-                    b.remover(valor); */
-                case 4:
-                    break;
-                default:
-                    System.out.println("Favor inserir um número valido:");
-                    System.out.println("\n--- Original B-Tree ---\n");
+    public void update(int id, long novaPosição){
+        int index = id % getTamanhoDir();
+        Bucket bucket = dir.bucketList.get(index);
+        for (int i = 0; i < ordem; i++){
+            if(id == bucket.listaChavePonteiro.get(i).getChave()){
+                bucket.listaChavePonteiro.get(index).setPos(novaPosição);
+                break;
             }
-            /* b.printTree(b.raiz, 0); */
-        } while (option != 4);
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        HashingEstendido hashing = new HashingEstendido(1, 10);
+        preencherHashing(hashing.arq, hashing);
+    }
+    
 
 
+    static void preencherHashing (RandomAccessFile arq, HashingEstendido h) throws Exception{
+        arq.seek(0);
+        arq.readInt();
+        Livro livro = new Livro();
+        while (arq.getFilePointer() < arq.length()) {
+            long oldPos = arq.getFilePointer();
+            char lapide = arq.readChar();
+            int tamanho = arq.readInt();
 
+            
+            if (lapide != '*') { // Checa se livro não foi removido ou atualizado por um registro maior
+
+                byte[] ba = new byte[tamanho];
+                arq.read(ba);
+                livro = new Livro(ba);
+                //System.err.println("----------- Inserindo id " + livro.getID() + " ---------------");
+                h.inserir(livro.getID(), oldPos);
+            } else { // Pula o registro do livro caso esteja marcado com a lápide
+                arq.seek(arq.getFilePointer() + tamanho);
+            }
+        }
+        toByteArray(arq, h);
+    }
+
+    static void toByteArray(RandomAccessFile arq, HashingEstendido h) throws Exception{
+        // Estrutura do arquivo
+        // tamanho -- i -- plocal -- chave1 -- pos1 -- chave2 -- pos2 -- ...
+        RandomAccessFile hashingByte = new RandomAccessFile("hashing.db", "rw");
+        int tamanho = h.dir.bucketList.size();
+        hashingByte.writeInt(tamanho);
+
+        // Estrutura do arquivo
+        // tamanho -- pGlocal -- ordem -- i -- pos -- ...
+        RandomAccessFile dirByte = new RandomAccessFile("dir.db", "rw");
+        int tamanhoDir = h.getTamanhoDir();
+        dirByte.writeInt(tamanhoDir);
+        dirByte.writeInt(h.pGlobal);
+        dirByte.writeInt(h.ordem);
+
+
+        for (int i = 0; i < tamanho; i++){
+            //System.out.println(i);
+            Bucket bucketatual = h.dir.bucketList.get(i);
+
+            dirByte.writeInt(i);
+            dirByte.writeLong(hashingByte.getFilePointer()); 
+
+            hashingByte.writeInt(i);
+            hashingByte.writeInt(bucketatual.pLocal);
+            
+            for (int j = 0; j< bucketatual.listaChavePonteiro.size(); j++){
+                //System.out.println("escrevendo par chave = " + bucketatual.listaChavePonteiro.get(j).getChave() + ", pos = " + bucketatual.listaChavePonteiro.get(j).getPos());
+                hashingByte.writeInt(bucketatual.listaChavePonteiro.get(j).getChave());
+                hashingByte.writeLong(bucketatual.listaChavePonteiro.get(j).getPos());
+            }
+        }
+        
+    }
+
+    static HashingEstendido fromByteArray(RandomAccessFile dir, RandomAccessFile hash) throws Exception{
+        dir.seek(0);
+        hash.seek(0);
+        int tamanho = dir.readInt();
+        int pG = dir.readInt();
+        int order = dir.readInt();
+        HashingEstendido h = new HashingEstendido(pG, order);
+        int pos;
+        for (int i = 0; i < tamanho; i++){
+            dir.seek(4); // pula o indice
+            pos = dir.readInt();
+            hash.seek(pos);
+            int index = hash.readInt();
+        }
+        return h;
     }
 }
+
+
+

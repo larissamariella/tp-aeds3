@@ -30,6 +30,5 @@ public class LoadingAnimation implements Runnable {
     public void stop() {
         running = false;
         System.out.flush(); // Esvazia o buffer de entrar
-        System.out.println("\n");
     }
 }

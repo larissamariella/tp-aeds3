@@ -15,6 +15,7 @@ public class Main {
                     loadingAnimation.stop();
                     try {
                         loadingThread.join(); // Espera a thread de animação terminar
+                        System.out.println("\n");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -27,3 +28,4 @@ public class Main {
         }
     }
 }
+
