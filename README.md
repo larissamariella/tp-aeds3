@@ -49,13 +49,17 @@ _Foram selecionados alguns atribuitos de interesse na base de dados, como:_
 
 ## Estruturas de Dados Criadas
 - ArvoreB
+  - Arvore B onde a ordem é passada como parâmetro na instanciação
+  - Foi utilizada uma arvore B de ordem 10 no exemplo
 - Hashing Extensível
   - Consiste em um hashing de tamanho extensível, onde os parametros referente ao pGlobal e o tamanho do bucket são passados na instanciação da classe. 
   - Foi utilizado pGlobal inicial 1 e bucket de tamanho(ordem) 11.
 - Lista Invertida
+  - Foi criada uma lista invertida que utiliza a indexação de todas as palavras presentes no título e nas categorias dos livros.
+  - Cada palavra representa uma string diferente para busca.
 
 ## Vídeo de apresentação
- [Apresentação TP1_AEDs III](https://youtu.be/pnpVqwxPcfI) 
+ [Apresentação TP2_AEDs III](https://youtu.be/id5fvLqA6vo) 
 
 ## Contribuições:
 
