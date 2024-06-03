@@ -22,6 +22,7 @@ public class CRUD {
 
         ListaInvertidaController.escreverArquivoListaTitulos();
         ListaInvertidaController.escreverArquivoListaCategorias();
+        LerByte lerByte = new LerByte();
         int opcao;
 
         do {
@@ -35,7 +36,9 @@ public class CRUD {
             System.out.println("5. Remover Livro");
             System.out.println("6. Buscar Termos no Título do Livro");
             System.out.println("7. Buscar Termos nas Categorias do Livro");
-            System.out.println("8. Sair");
+            System.out.println("8. Fazer Backup");
+            System.out.println("9. Descompactar Backup");
+            System.out.println("10. Sair");
             System.out.print("Escolha uma opção: ");
 
             opcao = scan.nextInt();
@@ -89,7 +92,13 @@ public class CRUD {
                             case 2:
                                 // Buscar via Arvore B.
                                 livro = arvoreB.buscar(id);
-                                Livro.exibir(livro);
+
+                                if (livro != null) {
+                                    System.out.println("\n+--Informações do livro--+");
+                                    Livro.exibir(livro);
+                                } else {
+                                    System.out.println("\nLivro não encontrado. :(\r\n");
+                                }
                                 break;
                             case 3:
                                 // Buscar via hashing
@@ -139,7 +148,7 @@ public class CRUD {
                     id = scan.nextInt();
 
                     crud.removerLivro(id, arq);
-                    arvoreB.remover(id);
+                   // arvoreB.remover(id);
                     h.deletar(id);
                     break;
                 case 6:
@@ -156,7 +165,30 @@ public class CRUD {
                     System.out.println();
                     ListaInvertidaController.buscarTermo(categoria, "categoria");
                     break;
-                    case 8:
+
+                case 8:
+                    System.out.println("Fazer Backup");
+                    lerByte.comprimir();
+                    LZW lzw = new LZW();
+                  //  if(taxaCompressao)
+                    break;
+                case 9:
+                    // Sair
+                    System.out.println("Descompactar para qual versao?");
+                    int backup = scan.nextInt();
+                
+                    if( lerByte.backup >= backup){
+                        System.out.println("Descompactar Backup");
+                        System.out.println("--------Huffman--------");
+                        lerByte.decodificar(backup);
+                        System.out.println("----------LZW----------");
+                        lerByte.decodificar(backup);
+                    }
+                    else{
+                        System.out.println("Backup não encontrado. Digite outra versão.");
+                    }
+                    break;
+                case 10:
                     // Sair
                     System.out.println("Saindo do Menu.");
                     break;
@@ -164,7 +196,7 @@ public class CRUD {
                     System.out.println("Opção inválida. Tente novamente.");
             }
 
-        } while (opcao != 8);
+        } while (opcao != 10);
 
         arq.close();
     }

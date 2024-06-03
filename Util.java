@@ -14,7 +14,7 @@ public class Util {
 
     // Escreve registro do livro
   
-    public static void escreverLivro(Livro livro, RandomAccessFile arq) throws IOException {
+    public static void escreverLivro(Livro livro, RandomAccessFile arq) throws IOException{
         arq.seek(0);
         arq.writeInt(livro.getID());
         long fim = arq.length();
@@ -22,7 +22,7 @@ public class Util {
 
         byte[] ba = livro.toByteArray();
 
-        ListaInvertidaController.inserirTermoNaListaTitulos(livro, fim);
+         ListaInvertidaController.inserirTermoNaListaTitulos(livro, fim);
         ListaInvertidaController.inserirTermoNaListaCategoria(livro, fim);
 
         arq.writeChar('-');
@@ -60,17 +60,29 @@ public class Util {
     // tp2
 
     public static boolean palavrasGenericas(String termo){
-        String termoLowerCaseString = termo.toLowerCase();
-        String[] palavrasGenericas = {"and", "is", "or", "the", "it", "that", "to", "of", "the", "by", "for", "in","a", "at", "with","on", "from","as","for","since","than"};
-        boolean resp = false;
 
-        for (int i = 0; i < palavrasGenericas.length; i++) {
-            if(palavrasGenericas[i].equals(termoLowerCaseString)){
-                resp = true;
-                i = palavrasGenericas.length;
-            }
-        }
-        return resp;
+        Set<String> palavrasGenericas = new HashSet<>();
+        palavrasGenericas.add("and");
+        palavrasGenericas.add("is");
+        palavrasGenericas.add("or");
+        palavrasGenericas.add("the");
+        palavrasGenericas.add("it");
+        palavrasGenericas.add("that");
+        palavrasGenericas.add("to");
+        palavrasGenericas.add("of");
+        palavrasGenericas.add("by");
+        palavrasGenericas.add("for");
+        palavrasGenericas.add("in");
+        palavrasGenericas.add("a");
+        palavrasGenericas.add("at");
+        palavrasGenericas.add("with");
+        palavrasGenericas.add("on");
+        palavrasGenericas.add("from");
+        palavrasGenericas.add("as");
+        palavrasGenericas.add("since");
+        palavrasGenericas.add("than");
+
+        return palavrasGenericas.contains(termo);
     }
 
     public static String formatarTermo(String termo) {

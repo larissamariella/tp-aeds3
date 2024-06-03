@@ -4,11 +4,12 @@ import java.util.*;
 public class LerCSV {
 
     // Inicia a leitura do csv e também, a escrita do arquivo de bytes
-    void lerArquivoCSV() throws IOException {
+    void lerArquivoCSV() throws Exception {
         String nomeArquivo = "amz kindle books updated.csv";
         RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw");
         RandomAccessFile arqByte = new RandomAccessFile("arquivo.db", "rw");
 
+        Arvore arvore = new Arvore();
         int ultimoID = 0;
         String str = arq.readLine();
         Livro livro;

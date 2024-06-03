@@ -13,7 +13,12 @@ public class ArvoreB {
         this.raiz = null;
         this.t = t;
         try {
-            this.file = new RandomAccessFile("arqArvore.db", "rw");
+            this.file = new RandomAccessFile("arqArvoreB.db", "rw");
+            RandomAccessFile arq = new RandomAccessFile("arquivo.db", "rw");
+            byte [] arqBytes = new byte[(int) arq.length()/40];
+            arq.read(arqBytes);
+            file.write(arqBytes);
+
             this.posicaoAtual = 0;
         } catch (IOException e) {
             e.printStackTrace();
@@ -324,5 +329,4 @@ public class ArvoreB {
             }
         }
     }
-
 }
